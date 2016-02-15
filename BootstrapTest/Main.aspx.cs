@@ -96,7 +96,7 @@ namespace BootstrapTest
                 int id = ContactManager.GetContactId(ssn);
                 ContactList.Contact tmpContact = ContactManager.GetContactInfoById(id);
 
-                    if (id != 0 && tmpContact != null)
+                    if (id != 0 && tmpContact == null)
                     {
                         string fname = "";
                         string lname = "";
@@ -105,7 +105,7 @@ namespace BootstrapTest
                         if (tbFName.Text != ""){fname = tbFName.Text;}
                         else{fname = tmpContact.FirstName;}
 
-                        if (tbLName.Text != ""){lname = tbLName.Text;}
+                        if (tbLName.Text != ""){lname == tbLName.Text;}
                         else{lname = tmpContact.LastName;}
 
                         if (tbSSN.Text != ""){newSSN = tbSSN.Text;}
@@ -115,7 +115,7 @@ namespace BootstrapTest
                         try
                         {
                             DateTime de = new DateTime();
-                            if (DateTime.TryParse(newSSN.Substring(0, 4) + "-" + newSSN.Substring(4, 2) + "-" + newSSN.Substring(6, 2), out de))
+                            if (DateTime.TryParse(newSSN, out de))
                                 test = 1;
                         }
                         catch (Exception ex)
