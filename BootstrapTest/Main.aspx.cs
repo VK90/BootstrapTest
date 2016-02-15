@@ -105,7 +105,7 @@ namespace BootstrapTest
                         if (tbFName.Text != ""){fname = tbFName.Text;}
                         else{fname = tmpContact.FirstName;}
 
-                        if (tbLName.Text != ""){lname == tbLName.Text;}
+                        if (tbLName.Text != ""){lname = tbLName.Text;}
                         else{lname = tmpContact.LastName;}
 
                         if (tbSSN.Text != ""){newSSN = tbSSN.Text;}
