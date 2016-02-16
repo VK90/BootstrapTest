@@ -6,22 +6,24 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ContactList;
+using System.Configuration;
 
 namespace BootstrapTest
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        const string CON_STR = "Data Source = ACADEMY001-VM;Initial Catalog = Contacts;Integrated Security = SSPI";
+        //const string CON_STR = "Data Source = ACADEMY001-VM;Initial Catalog = Contacts;Integrated Security = SSPI";
+        string CON_STR = ConfigurationManager.ConnectionStrings["CON_STR"].ConnectionString;
         List<ContactList.Contact> myContacts = new List<ContactList.Contact>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Request.QueryString["DelId"] != null)
             {
-                ContactManager.DeleteContact(Request.QueryString["DelId"].ToString());
+                ContactManager.DeleteContact(Request.QueryString["DelId"].ToString(), CON_STR);
                 Response.Redirect("~/Main.aspx");
             }
-            myContacts = ContactManager.LoadContacts();
+            myContacts = ContactManager.LoadContacts(CON_STR);
             LoadContacts();
         }
 
@@ -82,7 +84,7 @@ namespace BootstrapTest
             {
                 if (tbFName.Text != "" && tbLName.Text != "" && tbSSN.Text != "")
                 {
-                    ContactManager.AddContact(tbFName.Text, tbLName.Text, tbSSN.Text);
+                    ContactManager.AddContact(tbFName.Text, tbLName.Text, tbSSN.Text,CON_STR);
                     Response.Redirect("~/Main.aspx");
                 }
                 else
@@ -93,8 +95,8 @@ namespace BootstrapTest
             else
             {
                 string ssn = tbSSNtmp.Text;
-                int id = ContactManager.GetContactId(ssn);
-                ContactList.Contact tmpContact = ContactManager.GetContactInfoById(id);
+                int id = ContactManager.GetContactId(ssn,CON_STR);
+                ContactList.Contact tmpContact = ContactManager.GetContactInfoById(id,CON_STR);
 
                     if (id != 0 && tmpContact == null)
                     {
@@ -115,7 +117,7 @@ namespace BootstrapTest
                         try
                         {
                             DateTime de = new DateTime();
-                            if (DateTime.TryParse(newSSN, out de))
+                            if (DateTime.TryParse(newSSN.Substring(0,4) + "-" + newSSN.Substring(4,2) + "-" + newSSN.Substring(6,2), out de))
                                 test = 1;
                         }
                         catch (Exception ex)
@@ -125,7 +127,7 @@ namespace BootstrapTest
 
                         if (test == 1)
                         {
-                        ContactManager.EditContact(id, fname,lname,newSSN);
+                        ContactManager.EditContact(id, fname,lname,newSSN, CON_STR);
                         }
                     }
                 }
