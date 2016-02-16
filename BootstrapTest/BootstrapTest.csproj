@@ -104,6 +104,7 @@
     </Content>
     <Content Include="scripts\jquery-1.9.1.min.map" />
     <Content Include="DB\ContactsDB.bak" />
+    <Content Include="ViewPersonForm.aspx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -156,6 +157,13 @@
     </Compile>
     <Compile Include="Main.aspx.designer.cs">
       <DependentUpon>Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewPersonForm.aspx.cs">
+      <DependentUpon>ViewPersonForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewPersonForm.aspx.designer.cs">
+      <DependentUpon>ViewPersonForm.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

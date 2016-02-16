@@ -12,7 +12,6 @@ namespace BootstrapTest
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        //const string CON_STR = "Data Source = ACADEMY001-VM;Initial Catalog = Contacts;Integrated Security = SSPI";
         string CON_STR = ConfigurationManager.ConnectionStrings["CON_STR"].ConnectionString;
         List<ContactList.Contact> myContacts = new List<ContactList.Contact>();
 
@@ -59,8 +58,8 @@ namespace BootstrapTest
                     info += $" <td>{tmpContact.PersonNr}</td>";
                     info += " <td> </td>";
 
-                    info += " <td>";   
-                    info += $"<a href=\"ViewContact.aspx?id={tmpContact.PersonNr}\">View</a>";
+                    info += " <td>";
+                    info += $"<a href='/ViewPersonForm.aspx?ID={ContactManager.GetContactId(tmpContact.PersonNr, CON_STR)}'\">View</a>";
                     info += "&nbsp;|&nbsp;";
                     info += $"<a onClick=\"showModal('{tmpContact.PersonNr}','{tmpContact.FirstName}','{tmpContact.LastName}','Edit contact');\">Edit</a>";
                     info += "&nbsp;|&nbsp;";
@@ -84,7 +83,7 @@ namespace BootstrapTest
             {
                 if (tbFName.Text != "" && tbLName.Text != "" && tbSSN.Text != "")
                 {
-                    ContactManager.AddContact(tbFName.Text, tbLName.Text, tbSSN.Text,CON_STR);
+                    ContactManager.AddContact(tbFName.Text, tbLName.Text, tbSSN.Text, CON_STR);
                     Response.Redirect("~/Main.aspx");
                 }
                 else
@@ -95,43 +94,45 @@ namespace BootstrapTest
             else
             {
                 string ssn = tbSSNtmp.Text;
-                int id = ContactManager.GetContactId(ssn,CON_STR);
-                ContactList.Contact tmpContact = ContactManager.GetContactInfoById(id,CON_STR);
+                string id = ContactManager.GetContactId(ssn, CON_STR);
+                ContactList.Contact tmpContact = ContactManager.GetContactInfoById(id, CON_STR);
 
-                    if (id != 0 && tmpContact == null)
+                if (id != "" && tmpContact != null)
+                {
+                    string fname = "";
+                    string lname = "";
+                    string newSSN = ssn;
+
+                    if (tbFName.Text != "") { fname = tbFName.Text; }
+                    else { fname = tmpContact.FirstName; }
+
+                    if (tbLName.Text != "") { lname = tbLName.Text; }
+                    else { lname = tmpContact.LastName; }
+
+                    if (tbSSN.Text != "") { newSSN = tbSSN.Text; }
+                    else { newSSN = ssn; }
+                    int test = 0;
+
+                    Contact tmpCon = new Contact(fname, lname, newSSN);
+
+                    try
                     {
-                        string fname = "";
-                        string lname = "";
-                        string newSSN = ssn;
+                        DateTime de = new DateTime();
+                        if (DateTime.TryParse(tmpCon.PersonNr.Substring(0, 4) + "-" + tmpCon.PersonNr.Substring(4, 2) + "-" + tmpCon.PersonNr.Substring(6, 2), out de))
+                            test = 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        Response.Write(ex);
+                    }
 
-                        if (tbFName.Text != ""){fname = tbFName.Text;}
-                        else{fname = tmpContact.FirstName;}
-
-                        if (tbLName.Text != ""){lname = tbLName.Text;}
-                        else{lname = tmpContact.LastName;}
-
-                        if (tbSSN.Text != ""){newSSN = tbSSN.Text;}
-                        else{newSSN = ssn;}
-                        int test = 0;
-
-                        try
-                        {
-                            DateTime de = new DateTime();
-                            if (DateTime.TryParse(newSSN.Substring(0,4) + "-" + newSSN.Substring(4,2) + "-" + newSSN.Substring(6,2), out de))
-                                test = 1;
-                        }
-                        catch (Exception ex)
-                        {
-                            Response.Write(ex);
-                        }
-
-                        if (test == 1)
-                        {
-                        ContactManager.EditContact(id, fname,lname,newSSN, CON_STR);
-                        }
+                    if (test == 1)
+                    {
+                        ContactManager.EditContact(id, fname, lname, newSSN, CON_STR);
                     }
                 }
-                Response.Redirect("~/Main.aspx");
             }
+            Response.Redirect("~/Main.aspx");
         }
     }
+}
