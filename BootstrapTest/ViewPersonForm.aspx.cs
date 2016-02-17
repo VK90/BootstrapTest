@@ -17,7 +17,7 @@ namespace BootstrapTest
        
          protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["ID"] != null)
+            if (Request.QueryString["ID"] != null && Request.QueryString["ID"] != "")
             {
                 string id = Request.QueryString["ID"].ToString();
                 ContactList.Contact tmp = (ContactManager.GetContactInfoById(id, CON_STR));
@@ -28,7 +28,7 @@ namespace BootstrapTest
             }
             else
             {
-                for (int i = 0; i<100;i++)
+                for (int i = 0; i<1000;i++)
                 {
                     fullName.Text += "ERROR!1!11!!";
                 }
